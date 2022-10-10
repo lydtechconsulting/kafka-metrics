@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>demo.kafka</groupId>
-	<artifactId>kafka-metrics</artifactId>
+	<artifactId>kafka-metrics-demo</artifactId>
 	<version>1.0.0</version>
 	<name>kafka-metrics-demo</name>
 	<description>Spring Boot application demonstrating Kafka monitoring and JMX metrics</description>
@@ -181,6 +181,7 @@
 								<service.instance.count>1</service.instance.count>
 								<service.container.logging.enabled>false</service.container.logging.enabled>
 								<kafka.enabled>true</kafka.enabled>
+								<kafka.topic.partition.count>5</kafka.topic.partition.count>
 								<kafka.container.logging.enabled>false</kafka.container.logging.enabled>
 								<kafka.control.center.enabled>true</kafka.control.center.enabled>
 								<kafka.control.center.port>9021</kafka.control.center.port>

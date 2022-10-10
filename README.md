@@ -21,29 +21,6 @@ docker-compose up -d
 java -jar target/kafka-metrics-demo-1.0.0.jar
 ```
 
-### Kafka Confluent Control Center
-
-Confluent Control Center is a UI over the Kafka cluster, providing a view of the configuration, data and information on the brokers, topics and messages.
-
-Navigate to the Control Center:
-```
-http://localhost:9021
-```
-
-### Command Line Tools
-
-#### View topics
-
-Jump on to Kafka docker container:
-```
-docker exec -ti kafka bash
-```
-
-List topics:
-```
-kafka-topics --list --bootstrap-server localhost:9092
-```
-
 ## Component Tests
 
 The tests call the dockerise demo application over REST to trigger sending and consuming a configurable number of events.  The broker, producer and consumer metrics can then be viewed in the Confluent Control Center.
@@ -70,12 +47,27 @@ Run tests tearing down the containers at the end:
 mvn test -Pcomponent -Dcontainers.stayup=false
 ```
 
+### Kafka Confluent Control Center
+
+Confluent Control Center is a UI over the Kafka cluster, providing a view of the configuration, data and information on the brokers, topics and messages.  It also shows the JMX metrics exported from the broker, consumers and producers.
+
+Navigate to the Control Center:
+```
+http://localhost:9021
+```
+
+### Docker Clean Up
+
 Manual clean up (if left containers up):
 ```
 docker rm -f $(docker ps -aq)
 ```
 
-Further docker clean up if network issues:
+Further docker clean up (if network issues and to remove old images/volumes):
 ```
 docker network prune
+
+docker system prune
+
+docker volume prune
 ```
