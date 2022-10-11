@@ -20,8 +20,8 @@ public class KafkaDemoConsumer {
     @KafkaListener(topics = "demo-topic", groupId = "demo-consumer-group", containerFactory = "kafkaListenerContainerFactory")
     public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload final String payload) {
         counter.getAndIncrement();
-        if(counter.get() % 10000 == 0){
-            log.info("Total messages received: " +counter.get());
+        if(counter.get() % 100000 == 0){
+            log.info("Total events received (each 100000): " +counter.get());
         }
     }
 }

@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DemoEvent {
 
-    private String id;
-
     private String data;
 }

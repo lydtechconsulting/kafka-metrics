@@ -1,3 +1,8 @@
 ---
 kafka:
     bootstrap-servers: kafka:9092
+    producer:
+        lingerMs: 3
+    consumer:
+        maxPollIntervalMs: 30000
+        maxPollRecordsMs: 500

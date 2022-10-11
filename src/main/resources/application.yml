@@ -7,6 +7,11 @@ server:
 
 kafka:
     bootstrap-servers: localhost:9092
+    producer:
+        lingerMs: 0
+    consumer:
+        maxPollIntervalMs: 30000
+        maxPollRecordsMs: 500
 
 kafkademo:
     outboundTopic : "demo-topic"

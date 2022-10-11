@@ -5,6 +5,8 @@ import demo.kafka.service.DemoService;
 import demo.kafka.util.TestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -49,5 +51,25 @@ public class DemoControllerTest {
         ResponseEntity response = controller.trigger(request);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         verify(serviceMock, times(1)).process(request);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"NULL, 25, 100, 202",
+                        "10, NULL, 100, 202",
+                        "10, 25, NULL, 400",
+                        "10, 25, 100, 400",
+                        "0, NULL, 100, 400",
+                        "NULL, 0, 100, 400",
+                        "NULL, 25, 0, 400",
+                        "NULL, NULL, 100, 400",
+                        }, nullValues = "NULL")
+    void testListen_Validation(Integer numberOfEvents, Integer periodToSendSeconds, Integer payloadSizeBytes, Integer expectedHttpStatusCode) {
+        TriggerEventsRequest request = TriggerEventsRequest.builder()
+                .numberOfEvents(numberOfEvents)
+                .periodToSendSeconds(periodToSendSeconds)
+                .payloadSizeBytes(payloadSizeBytes)
+                .build();
+        ResponseEntity response = controller.trigger(request);
+        assertThat(response.getStatusCode().value(), equalTo(expectedHttpStatusCode));
     }
 }

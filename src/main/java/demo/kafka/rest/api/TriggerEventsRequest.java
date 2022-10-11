@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TriggerEventsRequest {
 
-    private Long numberOfEvents;
-    private Long periodToSendSeconds;
-    private Long payloadSizeBytes;
+    private Integer numberOfEvents;
+    private Integer periodToSendSeconds;
+    private Integer payloadSizeBytes;
 }

@@ -9,15 +9,14 @@ public class TestData {
 
     public static DemoEvent buildDemoEvent(String id) {
         return DemoEvent.builder()
-                .id(id)
                 .data(INBOUND_DATA)
                 .build();
     }
 
     public static TriggerEventsRequest buildTriggerEventsRequest() {
         return TriggerEventsRequest.builder()
-                .numberOfEvents(10l)
-                .payloadSizeBytes(100l)
+                .numberOfEvents(10)
+                .payloadSizeBytes(100)
                 .build();
     }
 }
