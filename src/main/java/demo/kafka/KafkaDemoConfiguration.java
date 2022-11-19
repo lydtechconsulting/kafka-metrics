@@ -2,6 +2,7 @@ package demo.kafka;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -39,27 +40,36 @@ public class KafkaDemoConfiguration {
     @Bean
     public ConsumerFactory<String, String> consumerFactory(@Value("${kafka.bootstrap-servers}") final String bootstrapServers,
                                                            @Value("${kafka.consumer.maxPollIntervalMs}") final String maxPollIntervalMs,
-                                                           @Value("${kafka.consumer.maxPollRecordsMs}") final String maxPollRecordsMs) {
+                                                           @Value("${kafka.consumer.maxPollRecords}") final String maxPollRecords,
+                                                           @Value("${kafka.confluent.monitoring.intercept.enabled}") final boolean interceptEnabled) {
         final Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "demo-consumer-group");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, maxPollIntervalMs);
-        config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecordsMs);
-        config.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
+        config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
+        if(interceptEnabled) {
+            config.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
+        }
+        config.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID());
         return new DefaultKafkaConsumerFactory<>(config);
     }
 
     @Bean
     public ProducerFactory<String, String> producerFactory(@Value("${kafka.bootstrap-servers}") final String bootstrapServers,
-                                                           @Value("${kafka.consumer.maxPollIntervalMs}") final String maxPollIntervalMs) {
+                                                           @Value("${kafka.producer.lingerMs}") final String lingerMs,
+                                                           @Value("${kafka.producer.acks}") final String acks,
+                                                           @Value("${kafka.confluent.monitoring.intercept.enabled}") final boolean interceptEnabled) {
         final Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
-        config.put(ProducerConfig.LINGER_MS_CONFIG, maxPollIntervalMs);
+        if(interceptEnabled) {
+            config.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
+        }
+        config.put(ProducerConfig.LINGER_MS_CONFIG, lingerMs);
+        config.put(ProducerConfig.ACKS_CONFIG, acks);
         return new DefaultKafkaProducerFactory<>(config);
     }
 }

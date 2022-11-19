@@ -9,9 +9,16 @@ kafka:
     bootstrap-servers: localhost:9092
     producer:
         lingerMs: 0
+        acks: all
+        async: false
     consumer:
         maxPollIntervalMs: 30000
-        maxPollRecordsMs: 500
+        maxPollRecords: 500
+    # Enable intercept for consumer and producer metrics with Confluent Control Center.
+    confluent:
+        monitoring:
+            intercept:
+                enabled: true
 
 kafkademo:
     outboundTopic : "demo-topic"

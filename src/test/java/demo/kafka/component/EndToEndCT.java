@@ -16,14 +16,19 @@ public class EndToEndCT {
     /**
      * Send in a REST request to trigger sending and consuming multiple events.
      *
+     * The REST call returns immediately, as it sends the events asychronously.  The test will therefore complete quickly
+     * while events may still be sent and consumed by the application.
+     *
      * Configure either NUMBER_OF_EVENTS or PERIOD_TO_SEND_SECONDS, and PAYLOAD_SIZE_BYTES.
+     *
+     * Configure the application-component-test.yml, for example to define whether the Producer send should be synchronous or asynchronous.
      *
      * Monitor the broker, topics and messages, and view the broker, consumer and producer metrics in Control Center.
      */
     @Test
     public void testFlow() {
 
-        Integer NUMBER_OF_EVENTS = 100000000;
+        Integer NUMBER_OF_EVENTS = 100000;
         Integer PERIOD_TO_SEND_SECONDS = 600;
         Integer PAYLOAD_SIZE_BYTES = 200;
 

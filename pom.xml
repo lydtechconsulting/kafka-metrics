@@ -129,7 +129,7 @@
 		<dependency>
 			<groupId>dev.lydtech</groupId>
 			<artifactId>component-test-framework</artifactId>
-			<version>1.10.0</version>
+			<version>1.11.0-SNAPSHOT</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -183,16 +183,23 @@
 							</environmentVariables>
 							<systemPropertyVariables>
 								<service.name>${project.name}</service.name>
-								<service.instance.count>1</service.instance.count>
+								<service.instance.count>3</service.instance.count>
 								<service.container.logging.enabled>false</service.container.logging.enabled>
 								<kafka.enabled>true</kafka.enabled>
+								<kafka.broker.count>3</kafka.broker.count>
 								<kafka.topic.partition.count>5</kafka.topic.partition.count>
+								<kafka.topic.replication.factor>3</kafka.topic.replication.factor>
+								<kafka.min.insync.replicas>3</kafka.min.insync.replicas>
 								<kafka.container.logging.enabled>false</kafka.container.logging.enabled>
 								<kafka.control.center.enabled>true</kafka.control.center.enabled>
+								<kafka.control.center.confluent.image.tag>7.2.1</kafka.control.center.confluent.image.tag>
 								<kafka.control.center.port>9021</kafka.control.center.port>
 								<kafka.control.center.export.metrics.enabled>true</kafka.control.center.export.metrics.enabled>
 								<kafka.control.center.jmx.port>9101</kafka.control.center.jmx.port>
 								<kafka.control.center.container.logging.enabled>false</kafka.control.center.container.logging.enabled>
+								<conduktor.enabled>false</conduktor.enabled>
+								<conduktor.image.tag>1.4.0</conduktor.image.tag>
+								<conduktor.port>8080</conduktor.port>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

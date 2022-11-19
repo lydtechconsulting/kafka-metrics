@@ -1,14 +1,17 @@
 package demo.kafka.service;
 
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 import demo.kafka.event.DemoEvent;
 import demo.kafka.lib.KafkaClient;
 import demo.kafka.mapper.JsonMapper;
+import demo.kafka.properties.KafkaDemoProperties;
 import demo.kafka.rest.api.TriggerEventsRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class DemoService {
 
     @Autowired
     private final KafkaClient kafkaClient;
+
+    @Autowired
+    private final KafkaDemoProperties properties;
 
     /**
      * Processing happens asynchronously so the caller can return.
@@ -33,7 +39,7 @@ public class DemoService {
             log.info("Sending {} events", request.getNumberOfEvents());
             for ( ; counter < request.getNumberOfEvents(); counter++) {
                 sendEvent(request.getPayloadSizeBytes());
-                if (counter % 100000 == 0) {
+                if (counter % 10000 == 0) {
                     log.info("Total events sent: {}", counter);
                 }
             }
@@ -44,7 +50,7 @@ public class DemoService {
             while (System.currentTimeMillis() < end) {
                 sendEvent(request.getPayloadSizeBytes());
                 counter++;
-                if (counter % 100000 == 0) {
+                if (counter % 10000 == 0) {
                     log.info("Total events sent: " + counter);
                 }
             }
@@ -53,7 +59,7 @@ public class DemoService {
     }
 
     /**
-     * Send an event asynchronously.
+     * Send an event.  Configuration determines whether to send synchronously or asynchronously.
      */
     private void sendEvent(Integer payloadSizeBytes) {
         String key = UUID.randomUUID().toString();
@@ -63,6 +69,15 @@ public class DemoService {
                 .data(payload)
                 .build();
 
-        kafkaClient.sendMessageAsync(key, JsonMapper.writeToJson(demoEvent));
+        Future<RecordMetadata> result = kafkaClient.sendMessageAsync(key, JsonMapper.writeToJson(demoEvent));
+        if(!properties.isKafkaProducerAsync()) {
+            try {
+                result.get();
+            } catch (Exception e) {
+                String message = "Unable to send message";
+                log.error(message, e);
+                throw new RuntimeException(message, e);
+            }
+        }
     }
 }

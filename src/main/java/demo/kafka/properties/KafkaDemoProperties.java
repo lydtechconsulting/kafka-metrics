@@ -15,4 +15,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class KafkaDemoProperties {
     @NotNull private String outboundTopic;
+
+    /**
+     * Whether to send messages asynchronously.
+     */
+    @NotNull private boolean kafkaProducerAsync;
 }
