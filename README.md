@@ -2,6 +2,11 @@
 
 Spring Boot application demonstrating Kafka monitoring and JMX metrics utilising Conduktor Platform and Confluent Control Center.
 
+This repo accompanies the following series of articles on Kafka Monitoring and Metrics:
+
+- [Kafka Monitoring & Metrics: With Conduktor](https://www.lydtechconsulting.com/blog-kafka-metrics-conduktor.html): monitoring a Kafka cluster using Conduktor to provide a view on the key broker and topic metrics.
+- [Kafka Monitoring & Metrics: With Confluent Control Center](https://www.lydtechconsulting.com/blog-kafka-metrics-control-center.html): monitoring a Kafka cluster using Confluent Control Center to provide a view on the key broker, topic, consumer and producer metrics.
+
 ## Overview
 
 The application provides a REST endpoint that accepts a request to trigger sending events.  Either the number of events to produce, or the period of time over which to produce events, can be specified.  The application consumes the events from the topic.  The consumer and the producer have interceptors to publish JMX metrics, so these can be observed in the Conflent Control Center, along with metrics on the Kafka broker. The Kafka broker, topics, and events can also be monitored in Conduktor Platform or the Confluent Control Center. 
