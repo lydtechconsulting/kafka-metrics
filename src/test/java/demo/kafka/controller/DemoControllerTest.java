@@ -32,7 +32,7 @@ public class DemoControllerTest {
      * Ensure that the REST request is successfully passed on to the service.
      */
     @Test
-    public void testListen_Success() {
+    public void testTrigger_Success() {
         TriggerEventsRequest request = TestData.buildTriggerEventsRequest();
         ResponseEntity response = controller.trigger(request);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
@@ -40,12 +40,10 @@ public class DemoControllerTest {
     }
 
     /**
-     * If an exception is thrown, an error is logged but the processing completes successfully.
-     *
-     * This ensures the consumer offsets are updated so that the message is not redelivered.
+     * If an exception is thrown, an internal server error is returned.
      */
     @Test
-    public void testListen_ServiceThrowsException() {
+    public void testTrigger_ServiceThrowsException() {
         TriggerEventsRequest request = TestData.buildTriggerEventsRequest();
         doThrow(new RuntimeException("Service failure")).when(serviceMock).process(request);
         ResponseEntity response = controller.trigger(request);
@@ -63,7 +61,7 @@ public class DemoControllerTest {
                         "NULL, 25, 0, 400",
                         "NULL, NULL, 100, 400",
                         }, nullValues = "NULL")
-    void testListen_Validation(Integer numberOfEvents, Integer periodToSendSeconds, Integer payloadSizeBytes, Integer expectedHttpStatusCode) {
+    void testTrigger_Validation(Integer numberOfEvents, Integer periodToSendSeconds, Integer payloadSizeBytes, Integer expectedHttpStatusCode) {
         TriggerEventsRequest request = TriggerEventsRequest.builder()
                 .numberOfEvents(numberOfEvents)
                 .periodToSendSeconds(periodToSendSeconds)
