@@ -164,7 +164,7 @@ docker build -t ct/kafka-metrics-demo:latest .
 
 Run tests (by default the containers are left running after the test run so Conduktor or Control Center metrics can be viewed):
 ```
-mvn test -Pcomponent
+mvn test -Pcomponent -Dcontainers.stayup=true
 ```
 
 Run tests tearing down the containers at the end:
