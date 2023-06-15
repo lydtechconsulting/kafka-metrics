@@ -19,12 +19,15 @@ public class DemoServiceTest {
 
     private KafkaClient mockKafkaClient;
     private KafkaDemoProperties mockKafkaDemoProperties;
+    private KafkaDemoProperties.Producer mockProducerProperties;
     private DemoService service;
 
     @BeforeEach
     public void setUp() {
         mockKafkaClient = mock(KafkaClient.class);
         mockKafkaDemoProperties = mock(KafkaDemoProperties.class);
+        mockProducerProperties = mock(KafkaDemoProperties.Producer.class);
+        when(mockKafkaDemoProperties.getProducer()).thenReturn(mockProducerProperties);
         service = new DemoService(mockKafkaClient, mockKafkaDemoProperties);
     }
 
@@ -33,7 +36,7 @@ public class DemoServiceTest {
      */
     @Test
     public void testProcess_NumberOfEvents() {
-        when(mockKafkaDemoProperties.isKafkaProducerAsync()).thenReturn(true);
+        when(mockProducerProperties.isAsync()).thenReturn(true);
 
         TriggerEventsRequest testEvent = TriggerEventsRequest.builder()
                 .numberOfEvents(10)
@@ -48,7 +51,7 @@ public class DemoServiceTest {
      */
     @Test
     public void testProcess_PeriodToSend() {
-        when(mockKafkaDemoProperties.isKafkaProducerAsync()).thenReturn(true);
+        when(mockProducerProperties.isAsync()).thenReturn(true);
 
         TriggerEventsRequest testEvent = TriggerEventsRequest.builder()
                 .periodToSendSeconds(1)
@@ -60,7 +63,7 @@ public class DemoServiceTest {
 
     @Test
     public void testProcess_SynchronousSend() {
-        when(mockKafkaDemoProperties.isKafkaProducerAsync()).thenReturn(false);
+        when(mockProducerProperties.isAsync()).thenReturn(false);
         when(mockKafkaClient.sendMessageAsync(anyString(), anyString())).thenReturn(mock(Future.class));
 
         TriggerEventsRequest testEvent = TriggerEventsRequest.builder()

@@ -70,7 +70,8 @@ public class DemoService {
                 .build();
 
         Future<RecordMetadata> result = kafkaClient.sendMessageAsync(key, JsonMapper.writeToJson(demoEvent));
-        if(!properties.isKafkaProducerAsync()) {
+        if(!properties.getProducer().isAsync()) {
+            log.debug("Sending message synchronously.");
             try {
                 result.get();
             } catch (Exception e) {

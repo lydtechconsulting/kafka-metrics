@@ -1,5 +1,6 @@
 package demo.kafka.properties;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -9,15 +10,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
 @Configuration
-@ConfigurationProperties("kafkademo")
+@ConfigurationProperties("kafka")
 @Getter
 @Setter
 @Validated
 public class KafkaDemoProperties {
     @NotNull private String outboundTopic;
 
-    /**
-     * Whether to send messages asynchronously.
-     */
-    @NotNull private boolean kafkaProducerAsync;
+    @NotNull
+    @Valid
+    private Producer producer;
+
+    @Getter
+    @Setter
+    @Validated
+    public static class Producer {
+
+        /**
+         * Whether to send messages asynchronously.
+         */
+        @NotNull
+        private boolean async;
+    }
 }
