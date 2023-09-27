@@ -11,8 +11,8 @@ import demo.kafka.rest.api.TriggerEventsRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +69,7 @@ public class DemoService {
                 .data(payload)
                 .build();
 
-        Future<RecordMetadata> result = kafkaClient.sendMessageAsync(key, JsonMapper.writeToJson(demoEvent));
+        Future<SendResult> result = kafkaClient.sendMessageAsync(key, JsonMapper.writeToJson(demoEvent));
         if(!properties.getProducer().isAsync()) {
             log.debug("Sending message synchronously.");
             try {

@@ -6,9 +6,9 @@ import demo.kafka.properties.KafkaDemoProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,10 +21,10 @@ public class KafkaClient {
     @Autowired
     private final KafkaTemplate kafkaTemplate;
 
-    public Future<RecordMetadata> sendMessageAsync(String key, String payload) {
+    public Future<SendResult> sendMessageAsync(String key, String payload) {
         try {
             final ProducerRecord<String, String> record = new ProducerRecord<>(properties.getOutboundTopic(), key, payload);
-            final Future<RecordMetadata> result = kafkaTemplate.send(record);
+            final Future<SendResult> result = kafkaTemplate.send(record);
             return result;
         } catch (Exception e) {
             String message = "Error sending message to topic " + properties.getOutboundTopic();

@@ -4,10 +4,10 @@ import java.util.concurrent.Future;
 
 import demo.kafka.properties.KafkaDemoProperties;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import static java.util.UUID.randomUUID;
@@ -49,7 +49,7 @@ public class KafkaClientTest {
         ListenableFuture futureResult = mock(ListenableFuture.class);
         when(kafkaTemplateMock.send(any(ProducerRecord.class))).thenReturn(futureResult);
 
-        Future<RecordMetadata> result = kafkaClient.sendMessageAsync(key, data);
+        Future<SendResult> result = kafkaClient.sendMessageAsync(key, data);
 
         verify(kafkaTemplateMock, times(1)).send(expectedRecord);
         assertThat(result, equalTo(futureResult));
