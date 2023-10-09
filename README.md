@@ -4,7 +4,7 @@ Spring Boot application demonstrating Kafka monitoring and JMX metrics utilising
 
 This repo accompanies the following series of articles on Kafka Monitoring and Metrics:
 
-- [Kafka Monitoring & Metrics: With Conduktor](https://www.lydtechconsulting.com/blog-metrics-conduktor.html): monitoring a Kafka cluster using Conduktor to provide a view on the key broker and topic metrics.
+- [Kafka Monitoring & Metrics: With Conduktor](https://www.lydtechconsulting.com/blog-kafka-metrics-conduktor.html): monitoring a Kafka cluster using Conduktor to provide a view on the key broker and topic metrics.
 - [Kafka Monitoring & Metrics: With Confluent Control Center](https://www.lydtechconsulting.com/blog-kafka-metrics-control-center.html): monitoring a Kafka cluster using Confluent Control Center to provide a view on the key broker, topic, consumer and producer metrics.
 
 ## Overview
