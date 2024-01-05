@@ -78,6 +78,11 @@ docker-compose -f docker-compose-control-center-multiple.yml up -d
 java -jar target/kafka-metrics-demo-1.0.0.jar
 ```
 
+In order to change the application properties without recompiling the application, they can be overridden in the application.yml located in the root of the project.  Then start the application with:
+```
+java -jar target/kafka-metrics-demo-1.0.0.jar -Dspring.config.additional-location=file:./application.yml
+```
+
 ### Trigger Events
 
 To trigger sending and consuming a configurable number of events send one of the following requests to the application using curl.
@@ -89,7 +94,7 @@ curl -v -d '{"numberOfEvents":100000, "payloadSizeBytes":200}' -H "Content-Type:
 
 To trigger sending events for a specified period of time:
 ```
-curl -v -d '{"periodToSendSeconds":600, "payloadSizeBytes":200}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/demo/trigger
+curl -v -d '{"periodToSendSeconds":600, "payloadSizeBytes":100}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/demo/trigger
 ```
 
 In both cases the size in bytes of the event payloads to create must be specified.

@@ -5,8 +5,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.security.plain.PlainLoginModule;
+import org.apache.kafka.common.security.scram.ScramLoginModule;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +45,10 @@ public class KafkaDemoConfiguration {
     public ConsumerFactory<String, String> consumerFactory(@Value("${kafka.bootstrap-servers}") final String bootstrapServers,
                                                            @Value("${kafka.consumer.maxPollIntervalMs}") final String maxPollIntervalMs,
                                                            @Value("${kafka.consumer.maxPollRecords}") final String maxPollRecords,
-                                                           @Value("${kafka.confluent.monitoring.intercept.enabled}") final boolean interceptEnabled) {
+                                                           @Value("${kafka.confluent.monitoring.intercept.enabled}") final boolean interceptEnabled,
+                                                           @Value("${kafka.sasl.enabled}") final Boolean saslEnabled,
+                                                           @Value("${kafka.sasl.username}") final String username,
+                                                           @Value("${kafka.sasl.password}") final String password) {
         final Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "demo-consumer-group");
@@ -53,6 +60,13 @@ public class KafkaDemoConfiguration {
             config.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
         }
         config.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID());
+        if(saslEnabled) {
+            config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+            config.put(SaslConfigs.SASL_MECHANISM, "SCRAM-SHA-256");
+            config.put(SaslConfigs.SASL_JAAS_CONFIG, String.format(
+                    "%s required username=\"%s\" password=\"%s\";", ScramLoginModule.class.getName(), username, password
+            ));
+        }
         return new DefaultKafkaConsumerFactory<>(config);
     }
 
@@ -60,7 +74,10 @@ public class KafkaDemoConfiguration {
     public ProducerFactory<String, String> producerFactory(@Value("${kafka.bootstrap-servers}") final String bootstrapServers,
                                                            @Value("${kafka.producer.lingerMs}") final String lingerMs,
                                                            @Value("${kafka.producer.acks}") final String acks,
-                                                           @Value("${kafka.confluent.monitoring.intercept.enabled}") final boolean interceptEnabled) {
+                                                           @Value("${kafka.confluent.monitoring.intercept.enabled}") final boolean interceptEnabled,
+                                                           @Value("${kafka.sasl.enabled}") final Boolean saslEnabled,
+                                                           @Value("${kafka.sasl.username}") final String username,
+                                                           @Value("${kafka.sasl.password}") final String password) {
         final Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -70,6 +87,13 @@ public class KafkaDemoConfiguration {
         }
         config.put(ProducerConfig.LINGER_MS_CONFIG, lingerMs);
         config.put(ProducerConfig.ACKS_CONFIG, acks);
+        if(saslEnabled) {
+            config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+            config.put(SaslConfigs.SASL_MECHANISM, "SCRAM-SHA-256");
+            config.put(SaslConfigs.SASL_JAAS_CONFIG, String.format(
+                    "%s required username=\"%s\" password=\"%s\";", ScramLoginModule.class.getName(), username, password
+            ));
+        }
         return new DefaultKafkaProducerFactory<>(config);
     }
 }

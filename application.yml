@@ -1,0 +1,14 @@
+---
+kafka:
+    bootstrap-servers: charming-ladybird-9398-eu1-kafka.upstash.io:9092
+    producer:
+        lingerMs: 0
+        acks: all
+        async: true
+    consumer:
+        maxPollIntervalMs: 30000
+        maxPollRecords: 500
+    sasl:
+        enabled: true
+        username: <snip>
+        password: <snip>
